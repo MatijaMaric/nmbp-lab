@@ -1,4 +1,8 @@
-import { createAllAsyncAction } from '../actionTypes';
-import { Movie } from './types';
+import { createAsyncAction } from "typesafe-actions";
+import { Movie } from "./types";
 
-export const fetchMovies = createAllAsyncAction('@Movies/FETCH_MOVIES')<void, Movie[], Error>();
+export const fetchMovies = createAsyncAction(
+  "@Movies/FETCH_MOVIES_REQUEST",
+  "@Movies/FETCH_MOVIES_SUCCESS",
+  "@Movies/FETCH_MOVIES_FAILURE"
+)<void, Movie[], Error>();

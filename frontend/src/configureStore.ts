@@ -1,25 +1,24 @@
-import { connectRouter, routerMiddleware } from 'connected-react-router';
-import { History } from 'history';
-import { applyMiddleware, createStore, Store } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension'
-import createSagaMiddleware from 'redux-saga';
-import { ApplicationState, rootReducer, rootSaga } from './store';
-
+import { connectRouter, routerMiddleware } from "connected-react-router";
+import { History } from "history";
+import { applyMiddleware, createStore, Store } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import { createEpicMiddleware } from "redux-observable";
+import { ApplicationState, rootEpic, rootReducer, RootAction } from "./store";
 
 export default function configureStore(
-    history: History,
-    initialState: ApplicationState
+  history: History,
+  initialState: ApplicationState
 ): Store<ApplicationState> {
+  const composeEnhancers = composeWithDevTools({});
+  const epicMiddleware = createEpicMiddleware<RootAction, RootAction, ApplicationState, void>();
 
-    const composeEnhancers = composeWithDevTools({});
-    const sagaMiddleware = createSagaMiddleware();
+  const store = createStore(
+    connectRouter(history)(rootReducer),
+    initialState,
+    composeEnhancers(applyMiddleware(routerMiddleware(history), epicMiddleware))
+  );
 
-    const store = createStore(
-        connectRouter(history)(rootReducer),
-        initialState,
-        composeEnhancers(applyMiddleware(routerMiddleware(history), sagaMiddleware))
-    );
+  epicMiddleware.run(rootEpic);
 
-    sagaMiddleware.run(rootSaga);
-    return store;
+  return store;
 }

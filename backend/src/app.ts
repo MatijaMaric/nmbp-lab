@@ -1,23 +1,36 @@
+/// <reference path="_all.d.ts" />
 "use strict";
-const express = require("express");
-const indexRoute = require("./routes/index");
+
+import * as express from 'express'
+import * as indexRoute from './routes/index';
+
 class Server {
-    static bootstrap() {
+    public app;
+
+    public static bootstrap(): Server {
         return new Server();
     }
-    constructor() {
+
+    public constructor() {
         this.app = express();
         this.config();
         this.routes();
     }
-    config() {
+
+    private config() {
+
     }
-    routes() {
+
+    private routes() {
         var router = express.Router();
-        var movies = new indexRoute.Movies();
+
+        var movies: indexRoute.Movies = new indexRoute.Movies();
+
         router.get('/api/movies', (req, res, next) => movies.all(req, res, next));
+
         this.app.use(router);
     }
 }
+
 var server = Server.bootstrap();
-module.exports = server.app;
+export = server.app;

@@ -1,15 +1,25 @@
 import { Reducer } from "redux";
-import { MoviesState } from './types';
+import { MoviesState, MoviesAction } from "./types";
+import * as movies from "./actions";
+import { getType } from "typesafe-actions";
 
 const initialState: MoviesState = {
-    movies: []
+  movies: []
 };
 
-const reducer: Reducer<MoviesState> = (state = initialState, action) => {
-    switch (action.type) {
-
+const reducer: Reducer<MoviesState> = (
+  state = initialState,
+  action: MoviesAction
+) => {
+  switch (action.type) {
+    case getType(movies.fetchMovies.success): {
+      return {
+        ...state,
+        movies: action.payload
+      };
     }
-    return state;
-}
+  }
+  return state;
+};
 
-export { reducer as MoviesReducer }
+export { reducer as MoviesReducer };

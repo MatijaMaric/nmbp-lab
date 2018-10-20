@@ -1,12 +1,17 @@
+import { ActionType } from "typesafe-actions";
+
+import * as movies from "./actions";
+
+export type MoviesAction = ActionType<typeof movies>;
 
 export interface MoviesState {
-    movies: Movie[];
+  movies: Movie[];
 }
 
 export interface Movie {
-    id: number;
-    title: string;
-    categories: string[];
-    summary: string;
-    description: string;    
+  movieid: number;
+  title: string;
+  categories: string;
+  summary: string;
+  description: string;
 }
