@@ -65,11 +65,24 @@ var Route;
     class Queries {
         log(req, res, next) {
             return __awaiter(this, void 0, void 0, function* () {
-                console.log('lel');
                 const query = req.params.query;
                 const timestamp = new Date();
                 const result = yield db.query("INSERT INTO queries(query, timestamp) VALUES ($1, $2)", [query, timestamp]);
                 res.send({ query, timestamp });
+            });
+        }
+        byHour(req, res, next) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const { startDate, endDate } = req.params;
+                const hoursResult = yield db.query("SELECT DISTINCT EXTRACT(HOUR FROM timestamp) as hour FROM queries WHERE timestamp BETWEEN $1 AND $2", [startDate, endDate]);
+                const hours = hoursResult.rows.map(row => row["hour"]);
+                const pivotResult = yield db.query("SELECT * FROM crosstab ('SELECT query, " +
+                    "EXTRACT(HOUR FROM timestamp) as hour, COUNT(query) FROM queries " +
+                    "WHERE timestamp BETWEEN $1 AND $2 " +
+                    "GROUP BY query, hour " +
+                    "ORDER BY query, hour' , 'SELECT DISTINCT EXTRACT(HOUR FROM timestamp) as hour FROM queries " +
+                    "ORDER BY hour') AS pivotTable (query text, a int) ORDER BY query;", [startDate, endDate]);
+                res.send(pivotResult.rows);
             });
         }
     }

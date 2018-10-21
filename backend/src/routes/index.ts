@@ -92,7 +92,6 @@ namespace Route {
       res: express.Response,
       next: express.NextFunction
     ) {
-        console.log('lel');
       const query = req.params.query;
       const timestamp = new Date();
       const result = await db.query(
@@ -100,6 +99,34 @@ namespace Route {
         [query, timestamp]
       );
       res.send({ query, timestamp });
+    }
+
+    public async byHour(
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) {
+      const {
+        startDate,
+        endDate
+      }: { startDate: Date; endDate: Date } = req.params;
+      const hoursResult = await db.query(
+        "SELECT DISTINCT EXTRACT(HOUR FROM timestamp) as hour FROM queries WHERE timestamp BETWEEN $1 AND $2",
+        [startDate, endDate]
+      );
+      const hours = hoursResult.rows.map(row => row["hour"]);
+
+      const pivotResult = await db.query(
+        "SELECT * FROM crosstab ('SELECT query, " +
+          "EXTRACT(HOUR FROM timestamp) as hour, COUNT(query) FROM queries " +
+          "WHERE timestamp BETWEEN $1 AND $2 " +
+          "GROUP BY query, hour " +
+          "ORDER BY query, hour' , 'SELECT DISTINCT EXTRACT(HOUR FROM timestamp) as hour FROM queries " +
+          "ORDER BY hour') AS pivotTable (query text, a int) ORDER BY query;",
+        [startDate, endDate]
+      );
+
+      res.send(pivotResult.rows);
     }
   }
 }

@@ -37,6 +37,7 @@ class Server {
         router.get('/api/movies/suggest/:query', (req, res, next) => movies.suggest(req, res, next))
 
         router.get('/api/query/log/:query', (req, res, next) => queries.log(req, res, next));
+        router.get('/api/query/pivot/day/:startDate/:endDate', (req, res, next) => queries.byHour(req, res, next))
 
         this.app.use(router);
     }
