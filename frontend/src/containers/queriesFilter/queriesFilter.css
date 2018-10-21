@@ -1,0 +1,13 @@
+.queries-filter-container {
+  margin: 25px;
+}
+
+.bp3-datepicker {
+  border: 1px solid #b6d0ff;
+  margin-bottom: 25px;
+}
+
+.day-hour {
+  display: flex;
+  flex-direction: row;
+}

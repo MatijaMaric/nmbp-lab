@@ -92,8 +92,9 @@ namespace Route {
       res: express.Response,
       next: express.NextFunction
     ) {
+        console.log('lel');
       const query = req.params.query;
-      const timestamp = Date.now();
+      const timestamp = new Date();
       const result = await db.query(
         "INSERT INTO queries(query, timestamp) VALUES ($1, $2)",
         [query, timestamp]

@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@blueprintjs/core": "^3.7.0",
+    "@blueprintjs/datetime": "^3.3.0",
+    "@blueprintjs/table": "^3.2.0",
     "@types/history": "^4.7.2",
     "@types/lodash": "^4.14.117",
     "@types/react-highlight": "^0.12.1",

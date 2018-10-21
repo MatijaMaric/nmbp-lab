@@ -13,19 +13,19 @@ var Route;
     class Movies {
         all(req, res, next) {
             return __awaiter(this, void 0, void 0, function* () {
-                const result = yield db.query('SELECT movieid, title, categories, summary, description FROM movies', []);
+                const result = yield db.query("SELECT movieid, title, categories, summary, description FROM movies", []);
                 res.send(result.rows);
             });
         }
         add(req, res, next) {
             return __awaiter(this, void 0, void 0, function* () {
                 const values = req.body;
-                const result = yield db.query('INSERT INTO movies(title, categories, summary, description) ' +
-                    'VALUES ($1, $2, $3, $4)', [
-                    values['title'],
-                    values['categories'],
-                    values['summary'],
-                    values['description']
+                const result = yield db.query("INSERT INTO movies(title, categories, summary, description) " +
+                    "VALUES ($1, $2, $3, $4)", [
+                    values["title"],
+                    values["categories"],
+                    values["summary"],
+                    values["description"]
                 ]);
                 console.log(result);
                 res.send(req.body);
@@ -34,9 +34,7 @@ var Route;
         getById(req, res, next) {
             return __awaiter(this, void 0, void 0, function* () {
                 const id = req.params.id;
-                const result = yield db.query('SELECT movieid, title, categories, summary, description FROM movies WHERE movieid = $1', [
-                    id
-                ]);
+                const result = yield db.query("SELECT movieid, title, categories, summary, description FROM movies WHERE movieid = $1", [id]);
                 res.send(result.rows);
             });
         }
@@ -67,9 +65,10 @@ var Route;
     class Queries {
         log(req, res, next) {
             return __awaiter(this, void 0, void 0, function* () {
+                console.log('lel');
                 const query = req.params.query;
-                const timestamp = Date.now();
-                const result = yield db.query('INSERT INTO queries(query, timestamp) VALUES ($1, $2)', [query, timestamp]);
+                const timestamp = new Date();
+                const result = yield db.query("INSERT INTO queries(query, timestamp) VALUES ($1, $2)", [query, timestamp]);
                 res.send({ query, timestamp });
             });
         }

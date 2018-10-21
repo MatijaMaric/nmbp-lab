@@ -9,6 +9,8 @@ import { ApplicationState } from "src/store";
 import { NavigationEnum } from 'src/store/navigation/types';
 import { AddMovieForm } from '../addMovieForm/addMovieForm';
 import { SearchForm } from '../searchForm/searchForm';
+import { QueriesFilter } from '../queriesFilter/queriesFilter';
+import { QueriesPivot } from '../queriesPivot/queriesPivot';
 
 export interface AppProps {
   appInit(): void;
@@ -35,7 +37,7 @@ class App extends React.Component<AppProps> {
             {this._renderFilter()}
           </div>
           <div className="app-body__right">
-            <MoviesList />
+            {this._renderData()}
           </div>
         </div>
       </div>
@@ -51,9 +53,24 @@ class App extends React.Component<AppProps> {
       case NavigationEnum.Add: 
         return <AddMovieForm />;
       case NavigationEnum.Search:
-        return <SearchForm />
+        return <SearchForm />;
+      case NavigationEnum.Analysis:
+        return <QueriesFilter />;
     }
-    return <div>SARMA</div>
+  }
+
+  private _renderData() {
+    const {
+      selectedItem
+    } = this.props;
+
+    switch (selectedItem) {
+      case NavigationEnum.Add:
+      case NavigationEnum.Search:
+        return <MoviesList />;
+      case NavigationEnum.Analysis:
+        return <QueriesPivot />;
+    }
   }
 }
 

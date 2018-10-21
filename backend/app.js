@@ -18,11 +18,13 @@ class Server {
     routes() {
         var router = express.Router();
         var movies = new indexRoute.Movies();
+        var queries = new indexRoute.Queries();
         router.get('/api/movies', (req, res, next) => movies.all(req, res, next));
         router.post('/api/movies/add', (req, res, next) => movies.add(req, res, next));
         router.get('/api/movies/:id', (req, res, next) => movies.getById(req, res, next));
         router.get('/api/movies/search/:query', (req, res, next) => movies.search(req, res, next));
         router.get('/api/movies/suggest/:query', (req, res, next) => movies.suggest(req, res, next));
+        router.get('/api/query/log/:query', (req, res, next) => queries.log(req, res, next));
         this.app.use(router);
     }
 }
