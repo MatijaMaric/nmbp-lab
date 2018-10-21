@@ -8,6 +8,9 @@ import { Provider } from "react-redux";
 import configureStore from "./configureStore";
 import Routes from "./routes";
 
+import './index.css';
+import 'node_modules/highlight.js/styles/atelier-lakeside-light.css';
+
 const history = createHashHistory();
 const initialState = window.initialReduxState;
 

@@ -1,0 +1,30 @@
+.search-box {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #b6d0ff;
+  padding: 5px;
+  border-radius: 5px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px !important;
+  margin: 5px;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+}
+
+.search-bar {
+  display: flex;
+  flex-direction: row;
+}
+
+.and-or {
+  display: flex;
+  flex-direction: row;
+}
+
+.search-container > pre {
+  padding-right: 25px;
+}

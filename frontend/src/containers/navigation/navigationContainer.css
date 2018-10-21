@@ -1,0 +1,12 @@
+.navigation-container {
+  display: flex;
+  flex-direction: row;
+  background-color: #145cc8;
+}
+
+.author {
+  margin-left: auto;
+  align-self: center;
+  margin-right: 25px;
+  color: white;
+}

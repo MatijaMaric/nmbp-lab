@@ -1,8 +1,10 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
-import { ApplicationState, RootAction } from "src/store";
+import { ApplicationState } from "src/store";
 import { Movie } from "src/store/movies/types";
+import MovieTile from 'src/components/movieTile/movieTile';
+
+import './moviesListContainer.css';
 
 export interface MoviesListProps {
   movies: Movie[];
@@ -14,26 +16,20 @@ function mapStateToProps(state: ApplicationState): Partial<MoviesListProps> {
   };
 }
 
-function mapDispatchToProps(
-  dispatch: Dispatch<RootAction>
-): Partial<MoviesListProps> {
-  return {};
-}
-
 class MoviesList extends React.Component<MoviesListProps> {
   public render(): React.ReactNode {
     const { movies } = this.props;
     return (
-      <div>
+      <div className="movies-list-container">
         {movies.map(movie => (
-          <div key={movie.movieid}>{movie.title}</div>
+          <MovieTile key={movie.movieid} movie={movie} />
         ))}
       </div>
     );
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+const moviesListContainer = connect(
+  mapStateToProps
 )(MoviesList);
+export { moviesListContainer as MoviesList };

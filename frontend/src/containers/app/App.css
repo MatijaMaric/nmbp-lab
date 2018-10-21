@@ -1,0 +1,24 @@
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-body {
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+  width: calc(100% - 100px);
+  height: calc(100vh - 44px);
+}
+
+.app-body__left {
+  width: 40%;
+  height: inherit;
+}
+
+.app-body__right {
+  width: 60%;
+  height: inherit;
+}

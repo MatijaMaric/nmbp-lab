@@ -1,0 +1,19 @@
+.add-movie-form {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+}
+
+.form-field {
+}
+
+.form-field__text,
+.form-field__textarea {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #b6d0ff;
+  padding: 5px;
+  border-radius: 5px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px !important;
+}
