@@ -48,9 +48,9 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
               onChange={this._onSearchChanged}
             />
             <datalist id="suggestions">
-              {this.props.suggestions.map(suggestion => {
+              {this.props.suggestions.map(suggestion => 
                 <option value={suggestion} />
-              })}
+              )}
             </datalist>
             <Button label="Search" onClick={this._onSearch} />
           </div>
