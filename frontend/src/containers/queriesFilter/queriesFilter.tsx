@@ -5,8 +5,12 @@ import { ApplicationState } from "src/store";
 
 import "@blueprintjs/datetime/";
 import "./queriesFilter.css";
+import { pivotByHour, pivotByDay } from "src/store/queries/actions";
 
-export interface QueriesFilterProps {}
+export interface QueriesFilterProps {
+  pivotByDay(payload: { startDate: Date; endDate: Date }): void;
+  pivotByHour(payload: { startDate: Date; endDate: Date }): void;
+}
 
 export interface QueriesFilterState {
   startDate: Date;
@@ -69,12 +73,27 @@ class QueriesFilter extends React.Component<
     );
   }
 
-  private _onByDayChanged = (event: React.ChangeEvent<HTMLInputElement>) =>
+  private _onByDayChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isDay = event.target.value === "day";
     this.setState({
-        byDay: event.target.value === "day"
+      byDay: isDay
     });
-
+    if (!isDay) {
+      this.setState({
+        startDate: new Date(),
+        endDate: new Date()
+      })
+    }
+  }
+    
   private _onDateChange = ([startDate, endDate]: [Date, Date]) => {
+    if (startDate && endDate) {
+      if (this.state.byDay) {
+        this.props.pivotByDay({ startDate, endDate });
+      } else {
+        this.props.pivotByHour({ startDate, endDate });
+      }
+    }
     this.setState({
       startDate,
       endDate
@@ -84,6 +103,9 @@ class QueriesFilter extends React.Component<
 
 const queriesFilterContainer = connect(
   mapStateToProps,
-  {}
+  {
+    pivotByHour: pivotByHour.request,
+    pivotByDay: pivotByDay.request
+  }
 )(QueriesFilter);
 export { queriesFilterContainer as QueriesFilter };

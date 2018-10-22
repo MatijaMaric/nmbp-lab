@@ -3,7 +3,7 @@ import { RootAction, ApplicationState } from "..";
 import { ObservableDependecies } from "src/configureStore";
 import { filter, mergeMap, map } from "rxjs/operators";
 import { isActionOf, ActionType } from "typesafe-actions";
-import { logQuery } from "./actions";
+import { logQuery, pivotByHour } from "./actions";
 import { Query } from "./types";
 import { searchMovie } from "../movies/actions";
 
@@ -37,6 +37,22 @@ export const logQueryFlow: Epic<
     )
   );
 
-const queryEpic = combineEpics(logQueryFlow, logAfterSearch);
+const pivotByHourUrl = "/api/query/pivot/hour";
+export const pivotByHourFlow: Epic<
+  RootAction,
+  RootAction,
+  ApplicationState,
+  ObservableDependecies
+> = (action$, state, { post }) =>
+  action$.pipe(
+    filter(isActionOf(pivotByHour.request)),
+    mergeMap(action =>
+      post(pivotByHourUrl, action.payload).pipe(
+        map(response => logQuery.success(response.response))
+      )
+    )
+  );
+
+const queryEpic = combineEpics(logQueryFlow, logAfterSearch, pivotByHourFlow);
 
 export default queryEpic;

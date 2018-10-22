@@ -109,7 +109,8 @@ namespace Route {
       const {
         startDate,
         endDate
-      }: { startDate: Date; endDate: Date } = req.params;
+      }: { startDate: Date; endDate: Date } = req.body;
+      
       const hoursResult = await db.query(
         "SELECT DISTINCT EXTRACT(HOUR FROM timestamp) as hour FROM queries WHERE timestamp BETWEEN $1 AND $2",
         [startDate, endDate]
@@ -122,11 +123,50 @@ namespace Route {
           "WHERE timestamp BETWEEN $1 AND $2 " +
           "GROUP BY query, hour " +
           "ORDER BY query, hour' , 'SELECT DISTINCT EXTRACT(HOUR FROM timestamp) as hour FROM queries " +
-          "ORDER BY hour') AS pivotTable (query text, a int) ORDER BY query;",
+          "ORDER BY hour') AS pivotTable (query text, " +
+          hours.map(hour => `h${hour} int `).join(', ') +
+          ") ORDER BY query;",
         [startDate, endDate]
       );
 
-      res.send(pivotResult.rows);
+      res.send({
+        rows: pivotResult.rows,
+        cols: pivotResult.fields.map(field => field.name)
+      });
+    }
+
+    public async byDay(
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) {
+      const {
+        startDate,
+        endDate
+      }: { startDate: Date; endDate: Date } = req.body;
+      const datesResult = await db.query(
+        "SELECT DISTINCT date(timestamp) FROM queries WHERE timestamp BETWEEN $1 AND $2",
+        [startDate, endDate]
+      );
+      const dates = datesResult.rows.map(row => row["date"] as Date);
+
+      const pivotResult = await db.query(
+        "SELECT * FROM crosstab ('SELECT query, " +
+          "date(timestamp), COUNT(query) FROM queries " +
+          "WHERE timestamp BETWEEN $1 AND $2 " +
+          "GROUP BY query, date " +
+          "ORDER BY query, date' , 'SELECT date(timestamp) FROM queries " +
+          "ORDER BY date') AS pivotTable (query text, " +
+          dates.map(date => `d${date.getDate}_${date.getMonth}_${date.getFullYear} int `).join(', ') +
+          ") ORDER BY query;",
+        [startDate, endDate]
+      );
+
+      res.send({
+        rows: pivotResult.rows,
+        cols: pivotResult.fields.map(field => field.name)
+      });
+
     }
   }
 }
