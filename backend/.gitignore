@@ -22,7 +22,3 @@ yarn-error.log*
 
 /.tscache
 
-/db
-/routes
-.baseDir.js
-app.js
