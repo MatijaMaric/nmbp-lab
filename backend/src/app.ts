@@ -37,7 +37,7 @@ class Server {
     );
     router.get("/api/movies/search/:query", (req, res, next) =>
       movies.search(req, res, next)
-    );
+    ); 
     router.get("/api/movies/suggest/:query", (req, res, next) =>
       movies.suggest(req, res, next)
     );
